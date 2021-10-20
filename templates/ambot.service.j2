@@ -1,0 +1,33 @@
+{{ ansible_managed | comment }}
+
+[Unit]
+Description=Alertmanager bot
+Documentation=https://github.com/metalmatze/alertmanager-bot
+After=network-online.target auditd.service
+
+[Service]
+Type=simple
+User={{ ambot_system_user }}
+Group={{ ambot_system_group }}
+EnvironmentFile=-/etc/default/ambot
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStart={{ ambot_install_dir }}/ambot --log.level=info \
+{% for item in ambot_telegram_admins %}
+  --telegram.admin={{ item }}{% if not loop.last %} {%endif%}
+{% endfor %}
+
+SyslogIdentifier=ambot
+Restart=always
+RestartSec=30
+
+ReadWriteDirectories={{ ambot_db_dir }}
+PrivateTmp=yes
+ProtectHome=yes
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectControlGroups=true
+ProtectKernelModules=true
+ProtectKernelTunables=yes
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+---
+# handlers file for v98765_ambot
+
+- name: restart ambot
+  become: true
+  systemd:
+    daemon_reload: true
+    name: ambot
+    state: restarted

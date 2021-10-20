@@ -1,0 +1,36 @@
+---
+- block:
+
+    - name: unarchive
+      become: false
+      unarchive:
+        src: "{{ ambot_repo_dir }}/alertmanager-bot-{{ ambot_version }}-linux-amd64.tar.gz"
+        dest: "/tmp/"
+        creates: "/tmp/alertmanager-bot-{{ ambot_version }}-linux-amd64"
+      check_mode: false
+
+    - name: "Copy ambot to {{ alertmanager_install_dir }}"
+      ansible.builtin.copy:
+        src: "/tmp/alertmanager-bot-{{ ambot_version }}-linux-amd64"
+        dest: "{{ ambot_install_dir }}/ambot"
+        owner: "root"
+        group: "root"
+        mode: 0755
+        remote_src: yes
+      notify: restart ambot
+
+- name: create ambot config directory
+  file:
+    path: "{{ ambot_config_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: create ambot db directory
+  file:
+    path: "{{ ambot_db_dir }}"
+    state: directory
+    owner: "{{ ambot_system_user }}"
+    group: "{{ ambot_system_group }}"
+    mode: 0755

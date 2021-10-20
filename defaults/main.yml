@@ -1,0 +1,28 @@
+---
+# defaults file for v98765_ambot
+
+ambot_version: "0.4.3"
+ambot_system_user: "ambot"
+ambot_system_group: "ambot"
+ambot_config_dir: "/etc/ambot"
+ambot_db_dir: "/var/lib/ambot"
+ambot_install_dir: "/usr/local/bin"
+ambot_repo_dir: "/var/tmp/archive"
+
+# Environment
+ambot_telegram_token: "123456789:AABBCCdd"
+ambot_alertmanager_url: "http://127.0.0.1:9093"
+ambot_listen_addr: "127.0.0.1:8080"
+ambot_store: "bolt"
+ambot_bolt_path: "{{ ambot_db_dir }}/ambot.db"
+ambot_template_path: "{{ ambot_config_dir }}/telegram.tmpl"
+
+# Params
+# use @userinfobot to find your id
+ambot_telegram_admins:
+  - 111111111
+  - 222222222
+
+# local file
+ambot_template_files:
+  - alertmanager/templates/telegram.tmpl

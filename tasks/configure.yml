@@ -1,0 +1,30 @@
+---
+- name: create env file
+  template:
+    src: ambot.j2
+    dest: /etc/default/ambot
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart ambot
+
+- name: create systemd service unit
+  template:
+    src: ambot.service.j2
+    dest: /lib/systemd/system/ambot.service
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart ambot
+
+- name: copy ambot template file
+  copy:
+    src: "{{ item }}"
+    dest: "{{ ambot_config_dir }}/"
+    force: true
+    owner: "{{ ambot_system_user }}"
+    group: "{{ ambot_system_group }}"
+    mode: 0644
+  with_fileglob: "{{ ambot_template_files }}"
+  notify:
+    - restart ambot

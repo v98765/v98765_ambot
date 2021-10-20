@@ -1,0 +1,28 @@
+---
+# tasks file for v98765_ambot
+
+- include: preinstall.yml
+  tags:
+    - ambot_install
+    - ambot_configure
+    - ambot_run
+
+- include: install.yml
+  become: true
+  tags:
+    - ambot_install
+
+- include: configure.yml
+  become: true
+  tags:
+    - ambot_configure
+
+- name: ensure ambot service is started and enabled
+  become: true
+  systemd:
+    daemon_reload: true
+    name: ambot
+    state: started
+    enabled: true
+  tags:
+    - ambot_run
